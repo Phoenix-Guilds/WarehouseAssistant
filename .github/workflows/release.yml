@@ -1,0 +1,26 @@
+name: Create Release Archive
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create Archive
+        run: |
+          mkdir WarehouseAssistant
+          cp -r *.toc *.lua *.xml *.md Media Fonts WarehouseAssistant/ 2>/dev/null || :
+
+          zip -r WarehouseAssistant.zip WarehouseAssistant
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: WarehouseAssistant.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
